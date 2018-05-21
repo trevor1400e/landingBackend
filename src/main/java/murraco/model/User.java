@@ -1,5 +1,7 @@
 package murraco.model;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -24,6 +26,9 @@ public class User {
 
   @Column(unique = true, nullable = false)
   private String email;
+
+  @Column
+  private String premexp;
 
   @Size(min = 8, message = "Minimum password length: 8 characters")
   private String password;
@@ -71,4 +76,11 @@ public class User {
     this.roles = roles;
   }
 
+    public String getPremexp() {
+        return premexp;
+    }
+
+    public void setPremexp(String premexp) {
+        this.premexp = premexp;
+    }
 }

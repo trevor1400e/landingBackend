@@ -14,6 +14,8 @@ public class UserResponseDTO {
   @ApiModelProperty(position = 2)
   private String email;
   @ApiModelProperty(position = 3)
+  private String premexp;
+  @ApiModelProperty(position = 4)
   List<Role> roles;
 
   public Integer getId() {
@@ -48,4 +50,11 @@ public class UserResponseDTO {
     this.roles = roles;
   }
 
+  public String getPremexp() {
+    return premexp;
+  }
+
+  public void setPremexp(String premexp) {
+    this.premexp = premexp;
+  }
 }
