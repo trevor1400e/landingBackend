@@ -38,6 +38,7 @@ import murraco.service.UserService;
 import springfox.documentation.spring.web.json.Json;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -197,8 +198,15 @@ public class UserController {
     List<Theme> userThemes = themeService.findByUsername(name);
     List items = new ArrayList();
 
-    for(Theme t : userThemes){
-     String omfg = "{\"value\": false, \"name\": \""+t.getUniquename()+"\", \"URL\": \"/"+t.getThemename()+"/"+t.getUniquename()+"\", \"conversions\": \"disabled\", \"impressions\": "+t.getPageviews()+", \"emails\": "+t.getEmailcount()+"}";
+      for(Theme t : userThemes){
+          String omfg = "";
+      if(t.getEmailcount() != 0 && t.getPageviews() != 0){
+              double roundOff = ((double)t.getEmailcount()) / ((double)t.getPageviews()) * 100f;
+              DecimalFormat df = new DecimalFormat("###.#");
+              omfg = "{\"value\": false, \"name\": \""+t.getUniquename()+"\", \"URL\": \"/"+t.getThemename()+"/"+t.getUniquename()+"\", \"conversions\": \""+df.format(roundOff)+"%\", \"impressions\": "+t.getPageviews()+", \"emails\": "+t.getEmailcount()+"}";
+      }else{
+          omfg = "{\"value\": false, \"name\": \""+t.getUniquename()+"\", \"URL\": \"/"+t.getThemename()+"/"+t.getUniquename()+"\", \"conversions\": \"0%\", \"impressions\": "+t.getPageviews()+", \"emails\": "+t.getEmailcount()+"}";
+      }
       items.add(omfg);
     }
 
