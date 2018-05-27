@@ -42,6 +42,7 @@ public class UserService {
   public String signup(User user) {
     if (!userRepository.existsByUsername(user.getUsername())) {
       user.setPassword(passwordEncoder.encode(user.getPassword()));
+      user.setPremiumstatus("unpaid");
       userRepository.save(user);
       return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
     } else {

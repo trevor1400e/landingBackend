@@ -14,7 +14,7 @@ public class UserResponseDTO {
   @ApiModelProperty(position = 2)
   private String email;
   @ApiModelProperty(position = 3)
-  private String premexp;
+  private String premiumstatus;
   @ApiModelProperty(position = 4)
   List<Role> roles;
 
@@ -50,11 +50,11 @@ public class UserResponseDTO {
     this.roles = roles;
   }
 
-  public String getPremexp() {
-    return premexp;
+  public String getPremiumstatus() {
+    return premiumstatus;
   }
 
-  public void setPremexp(String premexp) {
-    this.premexp = premexp;
+  public void setPremiumstatus(String premiumstatus) {
+    this.premiumstatus = premiumstatus;
   }
 }

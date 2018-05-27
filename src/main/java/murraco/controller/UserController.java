@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
+import com.stripe.model.Customer;
+import com.stripe.model.Subscription;
 import murraco.dto.*;
 import murraco.model.Email;
 import murraco.model.Role;
@@ -81,14 +83,7 @@ public class UserController {
       @ApiResponse(code = 422, message = "Username is already in use"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
-//    public String signup(@ApiParam("Username") @RequestParam String username, //
-//            @ApiParam("Password") @RequestParam String password,
-//            @ApiParam("Email") @RequestParam String email) {
-//      User newUser = new User();
-//      newUser.setUsername(username);
-//      newUser.setPassword(password);
-//      newUser.setEmail(email);
-//      newUser.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_CLIENT)));
+
     return userService.signup(modelMapper.map(user, User.class));
   }
 
@@ -125,6 +120,31 @@ public class UserController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public UserResponseDTO whoami(HttpServletRequest req) {
+
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String name = auth.getName();
+
+    User userToCheck = userRepository.findByUsername(name);
+
+    if(userToCheck.getCustomerid() != null){
+      try{
+        Stripe.apiKey = "sk_test_XqjOE25ia1m5Kp4FRWZ78GR2";
+
+        Customer checkStatus = Customer.retrieve(userToCheck.getCustomerid());
+        Subscription checkSubscription = Subscription.retrieve(checkStatus.getSubscriptions().getData().get(0).getId());
+
+        userToCheck.setPremiumstatus(checkSubscription.getStatus());
+
+        userRepository.save(userToCheck);
+
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+    }else{
+      userToCheck.setPremiumstatus("unpaid");
+      userRepository.save(userToCheck);
+    }
+
     return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
   }
 
@@ -195,28 +215,45 @@ public class UserController {
   public String upgrade(@ApiParam("User Token") @RequestBody ChargeDataDTO chargeDataDTO) {
 
     Stripe.apiKey = "sk_test_XqjOE25ia1m5Kp4FRWZ78GR2";
-
-    Map<String, Object> chargeMap = new HashMap<String, Object>();
-    chargeMap.put("amount", 1995);
-    chargeMap.put("currency", "usd");
-    chargeMap.put("source", chargeDataDTO.getChargetoken()); // obtained via Stripe.js
-
-    try {
-      Charge charge = Charge.create(chargeMap);
-    } catch (StripeException e) {
-      e.printStackTrace();
-      return "Failed damn";
-    }
-//TODO: grab user on successfuList emails;l request, set role to PREMIUM and set exp date.
-//
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String name = auth.getName();
     User tempUser = userRepository.findByUsername(name);
-    tempUser.setPremexp(LocalDate.now().plusMonths(1).toString());
-    tempUser.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_PREMIUM)));
+
+    if(tempUser.getCustomerid() == null) {
+
+        Map<String, Object> customerParams = new HashMap<String, Object>();
+
+        customerParams.put("description", "Customer for LeadLucky");
+        customerParams.put("source", chargeDataDTO.getChargetoken()); // obtained via Stripe.js
+
+        try {
+          Customer newCustomer = Customer.create(customerParams);
+
+          Map<String, Object> item = new HashMap<String, Object>();
+          item.put("plan", "plan_Cvo76gkcgiAIMh");
+
+          Map<String, Object> items = new HashMap<String, Object>();
+          items.put("0", item);
+
+          Map<String, Object> params = new HashMap<String, Object>();
+          params.put("customer", newCustomer.getId());
+          params.put("items", items);
+
+          Subscription theSub = Subscription.create(params);
+          tempUser.setCustomerid(newCustomer.getId());
+          tempUser.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_PREMIUM)));
+          tempUser.setPremiumstatus(theSub.getStatus());
+        } catch (StripeException e) {
+          e.printStackTrace();
+          return "Failed, bad token?";
+        }
+}else{
+      //Add update customer here
+      return "You're already premium?";
+    }
     userRepository.save(tempUser);
 
-    return "Was a success";
+    return "success";
   }
 
   @ResponseBody

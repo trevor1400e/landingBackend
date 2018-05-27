@@ -27,8 +27,11 @@ public class User {
   @Column(unique = true, nullable = false)
   private String email;
 
+  @Column(unique = true)
+  private String customerid;
+
   @Column
-  private String premexp;
+  private String premiumstatus;
 
   @Size(min = 8, message = "Minimum password length: 8 characters")
   private String password;
@@ -76,11 +79,19 @@ public class User {
     this.roles = roles;
   }
 
-    public String getPremexp() {
-        return premexp;
+    public String getCustomerid() {
+        return customerid;
     }
 
-    public void setPremexp(String premexp) {
-        this.premexp = premexp;
+    public void setCustomerid(String customerid) {
+        this.customerid = customerid;
+    }
+
+    public String getPremiumstatus() {
+        return premiumstatus;
+    }
+
+    public void setPremiumstatus(String premiumstatus) {
+        this.premiumstatus = premiumstatus;
     }
 }
