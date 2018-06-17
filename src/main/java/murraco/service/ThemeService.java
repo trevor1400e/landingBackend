@@ -10,15 +10,15 @@ import java.util.List;
 @Service
 public class ThemeService {
 
-  @Autowired
-  private ThemeRepository themeRepository;
+    @Autowired
+    private ThemeRepository themeRepository;
 
-  public Theme findByUniquename(String uniquename){
-    return themeRepository.findByUniquename(uniquename);
-  }
+    public Theme findByUniquename(String uniquename) {
+        return themeRepository.findByUniquename(uniquename);
+    }
 
-  public List<Theme> findByUsername(String username){
-    return themeRepository.findByUsername(username);
-  }
+    public List<Theme> findByUsername(String username) {
+        return themeRepository.findByUsername(username);
+    }
 
 }

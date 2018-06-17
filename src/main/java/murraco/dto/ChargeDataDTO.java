@@ -1,28 +1,24 @@
 package murraco.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-
 public class ChargeDataDTO {
-  
-  @ApiModelProperty(position = 0)
-  private String chargetoken;
-  @ApiModelProperty(position = 1)
-  private String email;
 
+    private String chargetoken;
 
-  public String getChargetoken() {
-    return chargetoken;
-  }
+    private String email;
 
-  public void setChargetoken(String chargetoken) {
-    this.chargetoken = chargetoken;
-  }
+    public String getChargetoken() {
+        return chargetoken;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public void setChargetoken(String chargetoken) {
+        this.chargetoken = chargetoken;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

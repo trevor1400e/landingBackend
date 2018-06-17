@@ -1,60 +1,58 @@
 package murraco.dto;
 
-import java.util.List;
-
-import io.swagger.annotations.ApiModelProperty;
 import murraco.model.Role;
+
+import java.util.List;
 
 public class UserResponseDTO {
 
-  @ApiModelProperty(position = 0)
-  private Integer id;
-  @ApiModelProperty(position = 1)
-  private String username;
-  @ApiModelProperty(position = 2)
-  private String email;
-  @ApiModelProperty(position = 3)
-  private String premiumstatus;
-  @ApiModelProperty(position = 4)
-  List<Role> roles;
+    private Integer id;
 
-  public Integer getId() {
-    return id;
-  }
+    private String username;
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    private String email;
 
-  public String getUsername() {
-    return username;
-  }
+    private String premiumstatus;
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    private List<Role> roles;
 
-  public String getEmail() {
-    return email;
-  }
+    public Integer getId() {
+        return id;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-  public List<Role> getRoles() {
-    return roles;
-  }
+    public String getUsername() {
+        return username;
+    }
 
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
-  }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-  public String getPremiumstatus() {
-    return premiumstatus;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public void setPremiumstatus(String premiumstatus) {
-    this.premiumstatus = premiumstatus;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getPremiumstatus() {
+        return premiumstatus;
+    }
+
+    public void setPremiumstatus(String premiumstatus) {
+        this.premiumstatus = premiumstatus;
+    }
 }
