@@ -8,7 +8,7 @@ import java.util.List;
 public class User {
 
     @ElementCollection(fetch = FetchType.EAGER)
-    List<Role> roles;
+    private List<Role> roles;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

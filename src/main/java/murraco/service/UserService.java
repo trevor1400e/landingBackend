@@ -34,18 +34,18 @@ public class UserService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
         } catch (AuthenticationException e) {
-            throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new CustomException("Invalid username/password supplied", HttpStatus.UNAUTHORIZED);
         }
     }
 
     public String signup(User user) {
-        if (!userRepository.existsByUsername(user.getUsername())) {
+        if (!userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setPremiumstatus("unpaid");
             userRepository.save(user);
             return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
         } else {
-            throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new CustomException("Username or email address is already in use", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -53,7 +53,7 @@ public class UserService {
         userRepository.deleteByUsername(username);
     }
 
-    public User search(String username) {
+    public User search(String username) throws CustomException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
