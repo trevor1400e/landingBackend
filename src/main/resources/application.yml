@@ -19,5 +19,5 @@ server:
 security:
   jwt:
     token:
-      secret-key:
+      secret-key: secretafyo
       expire-length: 360000000

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestAttributes;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandlerController {
 
   @Bean
@@ -32,17 +34,27 @@ public class GlobalExceptionHandlerController {
 
   @ExceptionHandler(CustomException.class)
   public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
+    if(ex.getHttpStatus() == HttpStatus.INTERNAL_SERVER_ERROR) {
+      logException(ex);
+    }
+
     res.sendError(ex.getHttpStatus().value(), ex.getMessage());
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   public void handleAccessDeniedException(HttpServletResponse res) throws IOException {
-    res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
+    res.sendError(HttpStatus.UNAUTHORIZED.value(), "Access denied");
   }
 
   @ExceptionHandler(Exception.class)
-  public void handleException(HttpServletResponse res) throws IOException {
-    res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
+  public void handleException(HttpServletResponse res, Exception ex) throws IOException {
+    logException(ex);
+    res.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong");
+  }
+
+  private void logException(Exception ex){
+    log.error(ex.getMessage());
+    ex.printStackTrace();
   }
 
 }

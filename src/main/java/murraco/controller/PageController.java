@@ -1,8 +1,8 @@
 package murraco.controller;
 
 import murraco.dto.EmailDataDTO;
-import murraco.model.Email;
-import murraco.model.Theme;
+import murraco.model.CollectedEmail;
+import murraco.model.Page;
 import murraco.repository.EmailRepository;
 import murraco.repository.ThemeRepository;
 import murraco.service.ThemeService;
@@ -28,30 +28,30 @@ public class PageController {
 
     @GetMapping(value = "/{unique}")
     public String pagedata(@PathVariable String unique) {
-        Theme aTheme = themeService.findByUniquename(unique);
+        Page page = themeService.findByUniquename(unique);
 
 //    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //    String name = auth.getName();
 //    System.out.println(name);
 
-        aTheme.addView(1);
-        themeRepository.save(aTheme);
+        page.addView(1);
+        themeRepository.save(page);
 
-        return aTheme.getData();
+        return page.getData();
     }
 
     @PostMapping(value = "/email")
     public String saveEmail(@RequestBody EmailDataDTO emailDataDTO) {
-        Theme billNye = themeService.findByUniquename(emailDataDTO.getUniquename());
+        Page theme = themeService.findByUniquename(emailDataDTO.getUniquename());
 
-        if (billNye != null) {
-            Email emailTemp = new Email();
-            emailTemp.setUniquename(emailDataDTO.getUniquename());
+        if (theme != null) {
+            CollectedEmail emailTemp = new CollectedEmail();
+            emailTemp.setPageName(emailDataDTO.getUniquename());
             emailTemp.setEmail(emailDataDTO.getEmail());
-            emailTemp.setUsername(billNye.getUsername());
+            emailTemp.setUsername(theme.getUsername());
 
-            billNye.addEmail(1);
-            themeRepository.save(billNye);
+            theme.addEmail(1);
+            themeRepository.save(theme);
             emailRepository.save(emailTemp);
         } else {
             return "No template page found";

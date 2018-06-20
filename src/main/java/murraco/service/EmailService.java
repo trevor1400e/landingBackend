@@ -1,6 +1,6 @@
 package murraco.service;
 
-import murraco.model.Email;
+import murraco.model.CollectedEmail;
 import murraco.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class EmailService {
     @Autowired
     private EmailRepository emailRepository;
 
-    public List<Email> findByUniquename(String uniquename) {
+    public List<CollectedEmail> findByUniquename(String uniquename) {
         return emailRepository.findByUniquename(uniquename);
     }
 

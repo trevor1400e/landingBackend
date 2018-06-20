@@ -1,6 +1,6 @@
 package murraco.service;
 
-import murraco.model.Theme;
+import murraco.model.Page;
 import murraco.repository.ThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ public class ThemeService {
     @Autowired
     private ThemeRepository themeRepository;
 
-    public Theme findByUniquename(String uniquename) {
+    public Page findByUniquename(String uniquename) {
         return themeRepository.findByUniquename(uniquename);
     }
 
-    public List<Theme> findByUsername(String username) {
+    public List<Page> findByUsername(String username) {
         return themeRepository.findByUsername(username);
     }
 

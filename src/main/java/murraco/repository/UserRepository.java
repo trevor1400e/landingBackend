@@ -4,6 +4,7 @@ import murraco.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
@@ -11,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByUsernameOrEmail(String username, String email);
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     void deleteByUsername(String username);
 

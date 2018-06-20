@@ -1,5 +1,8 @@
 package murraco.dto;
 
+import lombok.Data;
+
+@Data
 public class ThemeDataDTO {
 
     private String uniquename;
@@ -8,27 +11,5 @@ public class ThemeDataDTO {
 
     private String data;
 
-    public String getUniquename() {
-        return uniquename;
-    }
 
-    public void setUniquename(String uniquename) {
-        this.uniquename = uniquename;
-    }
-
-    public String getThemename() {
-        return themename;
-    }
-
-    public void setThemename(String themename) {
-        this.themename = themename;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
 }

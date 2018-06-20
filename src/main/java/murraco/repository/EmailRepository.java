@@ -1,12 +1,12 @@
 package murraco.repository;
 
-import murraco.model.Email;
+import murraco.model.CollectedEmail;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface EmailRepository extends JpaRepository<Email, Integer> {
+public interface EmailRepository extends JpaRepository<CollectedEmail, Integer> {
 
-    List<Email> findByUniquename(String uniquename);
+    List<CollectedEmail> findByUniquename(String uniquename);
 
 }

@@ -1,14 +1,16 @@
 package murraco.repository;
 
-import murraco.model.Theme;
+import murraco.model.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
-public interface ThemeRepository extends JpaRepository<Theme, Integer> {
+public interface ThemeRepository extends JpaRepository<Page, Integer> {
 
-    List<Theme> findByUsername(String username);
+    List<Page> findByOwnerUsername(String username);
 
-    Theme findByUniquename(String uniquename);
+    Optional<Page> findByName(String name);
 
 }
