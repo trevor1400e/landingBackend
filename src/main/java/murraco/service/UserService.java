@@ -29,7 +29,7 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public String signin(String username, String password) {
+    public String signIn(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             return jwtTokenProvider.createToken(
@@ -42,7 +42,7 @@ public class UserService {
         }
     }
 
-    public String signup(User user) {
+    public String signUp(User user) {
         if (!userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setPremiumStatus("unpaid");

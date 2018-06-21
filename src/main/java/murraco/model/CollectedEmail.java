@@ -1,6 +1,7 @@
 package murraco.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class CollectedEmail {
     @Column(nullable = false)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date createdDate;
 
     @ManyToOne

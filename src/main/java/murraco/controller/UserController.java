@@ -9,14 +9,11 @@ import murraco.dto.UserDataDTO;
 import murraco.dto.UserLogin;
 import murraco.dto.UserResponseDTO;
 import murraco.exception.CustomException;
-import murraco.model.CollectedEmail;
 import murraco.model.Page;
 import murraco.model.Role;
 import murraco.model.User;
-import murraco.repository.EmailRepository;
-import murraco.repository.ThemeRepository;
+import murraco.repository.PageRepository;
 import murraco.repository.UserRepository;
-import murraco.service.ThemeService;
 import murraco.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +37,8 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private ThemeRepository themeRepository;
+    private PageRepository pageRepository;
 
-    @Autowired
-    private ThemeService themeService;
-
-    @Autowired
-    private EmailRepository emailRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -54,12 +46,12 @@ public class UserController {
     @PostMapping("/signin")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public String login(@RequestBody UserLogin user) {
-        return userService.signin(user.getUsername(), user.getPassword());
+        return userService.signIn(user.getUsername(), user.getPassword());
     }
 
     @PostMapping("/signup")
     public String signup(@RequestBody UserDataDTO user) {
-        return userService.signup(modelMapper.map(user, User.class));
+        return userService.signUp(modelMapper.map(user, User.class));
     }
 
     @DeleteMapping(value = "/{username}")
@@ -188,13 +180,13 @@ public class UserController {
     public String txtEmail(HttpServletResponse response, @PathVariable String unique) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Page tempTheme = themeRepository.findByName(unique).orElseThrow(
+        Page tempTheme = pageRepository.findByName(unique).orElseThrow(
                 () -> new CustomException("Could not find page with name " + unique, HttpStatus.NOT_FOUND)
         );
 
         User user = tempTheme.getOwner();
 
-        if(!user.getUsername().equals(auth.getName())){
+        if (!user.getUsername().equals(auth.getName())) {
             return "Not your template."; // TODO 401
         }
 

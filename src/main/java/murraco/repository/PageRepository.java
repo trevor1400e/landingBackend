@@ -7,7 +7,7 @@ import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
-public interface ThemeRepository extends JpaRepository<Page, Integer> {
+public interface PageRepository extends JpaRepository<Page, Integer> {
 
     List<Page> findByOwnerUsername(String username);
 

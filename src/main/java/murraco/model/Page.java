@@ -50,5 +50,15 @@ public class Page {
         return emails.size();
     }
 
+    public void addView(PageView pageView) {
+        pageView.setPage(this);
+        views.add(pageView);
+    }
+
+    public void addEmail(CollectedEmail email) {
+        email.setPage(this);
+        emails.add(email);
+    }
+
 }
 

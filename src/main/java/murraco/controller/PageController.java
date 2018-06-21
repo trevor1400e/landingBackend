@@ -1,14 +1,19 @@
 package murraco.controller;
 
-import murraco.dto.EmailDataDTO;
+import murraco.exception.CustomException;
 import murraco.model.CollectedEmail;
 import murraco.model.Page;
+import murraco.model.PageView;
 import murraco.repository.EmailRepository;
-import murraco.repository.ThemeRepository;
-import murraco.service.ThemeService;
+import murraco.repository.PageRepository;
 import murraco.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/page")
@@ -18,50 +23,50 @@ public class PageController {
     private UserService userService;
 
     @Autowired
-    private ThemeService themeService;
-
-    @Autowired
-    private ThemeRepository themeRepository;
+    private PageRepository pageRepository;
 
     @Autowired
     private EmailRepository emailRepository;
 
-    @GetMapping(value = "/{unique}")
-    public String pagedata(@PathVariable String unique) {
-        Page page = themeService.findByUniquename(unique);
+    @GetMapping(value = "/{pageName}/data")
+    public String getPageData(@PathVariable String pageName, HttpServletRequest req) {
+        Page page = pageRepository.findByName(pageName)
+                .orElseThrow(() -> new CustomException(
+                        "No page found with name " + pageName,
+                        HttpStatus.NOT_FOUND
+                ));
 
-//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//    String name = auth.getName();
-//    System.out.println(name);
+        // Extract client IP Address from request
+        String ipAddress = req.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null)
+            ipAddress = req.getRemoteAddr();
 
-        page.addView(1);
-        themeRepository.save(page);
+        // Create page view to record IP and timestamp
+        PageView pageView = new PageView();
+        pageView.setIpAddress(ipAddress);
+
+        // Persist the page view
+        page.addView(pageView);
+        pageRepository.save(page);
 
         return page.getData();
     }
 
-    @PostMapping(value = "/email")
-    public String saveEmail(@RequestBody EmailDataDTO emailDataDTO) {
-        Page theme = themeService.findByUniquename(emailDataDTO.getUniquename());
+    @PostMapping(value = "/{pageName}/email")
+    public Map saveEmail(
+            @PathVariable String pageName,
+            @RequestBody CollectedEmail email) {
 
-        if (theme != null) {
-            CollectedEmail emailTemp = new CollectedEmail();
-            emailTemp.setPageName(emailDataDTO.getUniquename());
-            emailTemp.setEmail(emailDataDTO.getEmail());
-            emailTemp.setUsername(theme.getUsername());
+        Page page = pageRepository.findByName(pageName)
+                .orElseThrow(() -> new CustomException(
+                        "No page found with name " + pageName,
+                        HttpStatus.NOT_FOUND)
+                );
 
-            theme.addEmail(1);
-            themeRepository.save(theme);
-            emailRepository.save(emailTemp);
-        } else {
-            return "No template page found";
-        }
-//
-//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//    String name = auth.getName();
-//    System.out.println(name);
+        page.addEmail(email);
+        pageRepository.save(page);
 
-        return "Was a success yo";
+        return Collections.singletonMap("message", "Email address received.");
     }
 
 }

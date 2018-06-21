@@ -44,7 +44,7 @@ public class JwtAuthServiceApp {
 //        admin.setEmail("admin@email.com");
 //        admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
 //
-//        userService.signup(admin);
+//        userService.signUp(admin);
 //
 //        User client = new User();
 //        client.setUsername("client");
@@ -52,7 +52,7 @@ public class JwtAuthServiceApp {
 //        client.setEmail("client@email.com");
 //        client.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_CLIENT)));
 //
-//        userService.signup(client);
+//        userService.signUp(client);
 //    }
 
 }
