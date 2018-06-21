@@ -4,7 +4,6 @@ import murraco.exception.CustomException;
 import murraco.model.CollectedEmail;
 import murraco.model.Page;
 import murraco.model.PageView;
-import murraco.repository.EmailRepository;
 import murraco.repository.PageRepository;
 import murraco.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public class PageController {
 
     @Autowired
     private PageRepository pageRepository;
-
-    @Autowired
-    private EmailRepository emailRepository;
 
     @GetMapping(value = "/{pageName}/data")
     public String getPageData(@PathVariable String pageName, HttpServletRequest req) {

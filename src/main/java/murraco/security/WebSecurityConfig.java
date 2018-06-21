@@ -24,19 +24,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        // Disable CSRF (cross site request forgery)
+        // Disable CSRF
         http.cors().and().csrf().disable();
 
         // No session will be created or used by spring security
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        // Entry points
-        http.authorizeRequests()//
-                .antMatchers("/users/signIn").permitAll()//
-                .antMatchers("/users/signUp").permitAll()//
-                .antMatchers("/page/**").permitAll()//
-                // Disallow everything else..
-                .anyRequest().authenticated();
 
         // If a user try to access a resource without having enough permissions
         http.exceptionHandling().accessDeniedPage("/login");
@@ -44,8 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Apply JWT
         http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
 
-        // Optional, if you want to test the API from a browser
-        // http.httpBasic();
     }
 
     @Bean
