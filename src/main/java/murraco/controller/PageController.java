@@ -4,10 +4,15 @@ import murraco.exception.CustomException;
 import murraco.model.CollectedEmail;
 import murraco.model.Page;
 import murraco.model.PageView;
+import murraco.model.User;
 import murraco.repository.PageRepository;
+import murraco.repository.UserRepository;
 import murraco.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,11 +20,11 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/page")
+@RequestMapping("/pages")
 public class PageController {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
     private PageRepository pageRepository;
@@ -46,6 +51,24 @@ public class PageController {
         pageRepository.save(page);
 
         return page.getData();
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
+    public boolean saveTheme(@RequestBody Page page) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User user = userRepository.findByUsername(auth.getName())
+                    .orElseThrow(CustomException.getUserNotFoundHandler(auth.getName()));
+
+            user.addPage(page);
+
+            userRepository.save(user);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @PostMapping(value = "/{pageName}/email")

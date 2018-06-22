@@ -95,23 +95,7 @@ public class UserController {
         return user;
     }
 
-    @PostMapping(value = "/theme")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
-    public boolean saveTheme(@RequestBody Page page) {
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = userRepository.findByUsername(auth.getName())
-                    .orElseThrow(CustomException.getUserNotFoundHandler(auth.getName()));
 
-            user.addPage(page);
-
-            userRepository.save(user);
-
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
     @GetMapping(value = "/me/pages")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
