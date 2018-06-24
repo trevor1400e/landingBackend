@@ -45,8 +45,8 @@ public class UserController {
 
     @PostMapping("/signin")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public String login(@RequestBody UserLogin user) {
-        return userService.signIn(user.getUsername(), user.getPassword());
+    public String login(@RequestBody UserLogin creds) {
+        return userService.signIn(creds.getUsername(), creds.getPassword());
     }
 
     @PostMapping("/signup")

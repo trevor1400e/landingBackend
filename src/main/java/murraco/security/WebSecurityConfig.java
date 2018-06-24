@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Entry points
         http.authorizeRequests()
-                .antMatchers("/users/signIn", "/users/signUp", "/page/**").permitAll()//
+                .antMatchers("/users/signin", "/users/signup", "/page/**").permitAll()//
                 // Disallow everything else..
                 .anyRequest().authenticated();
 
@@ -55,7 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/public/**");
+                .antMatchers("/public/**", "/users/signIn", "/users/signUp")
+        ;
     }
 
     @Bean
